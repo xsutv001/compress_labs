@@ -25,7 +25,7 @@ class Node:
     def __lt__(self, other):
         return self.freq < other.freq
 
-
+#Побудова дерева Хаффмана
 def build_huffman_tree(text):
     freq = Counter(text)
     heap = [Node(ch, fr) for ch, fr in freq.items()]
@@ -68,12 +68,11 @@ def huffman_decode(encoded, root):
         node = node.left if bit == '0' else node.right
         if node.char is not None:
             result += node.char
-            node = root  # Reset to root after finding a character
-
+            node = root 
     return result
 
 
-# --- АРИФМЕТИКА ---
+# Арифметичне кодування
 def get_frequencies(text):
     freq = Counter(text)
     total = sum(freq.values())
@@ -121,14 +120,11 @@ def arithmetic_decode(code, intervals, length):
 
 def calculate_arithmetic_bits(low, high):
     """Calculate the minimum number of bits needed to represent a number in [low, high]"""
-    # The precision we need is enough to distinguish between low and high
     diff = high - low
-    # Convert to binary and count significant bits
-    # We need -log2(diff) bits to represent this range
     return math.ceil(-math.log2(float(diff)))
 
 
-# --- ВИКОНАННЯ ---
+# Виконання
 # Хаффман
 root = build_huffman_tree(text)
 codes = generate_huffman_codes(root)
@@ -141,19 +137,18 @@ intervals = build_intervals(frequencies)
 code, low_bound, high_bound = arithmetic_encode(text, intervals)
 decoded = arithmetic_decode(code, intervals, len(text))
 
-# Оцінка розмірів
+# Оцінка ефективності стиснення
 original_bits = len(text) * 8
 huffman_bits = len(encoded_huff)
 arithm_bits = calculate_arithmetic_bits(low_bound, high_bound)
 
-# --- ВИВІД ---
 print("Початковий текст:", text)
-print("\n--- ХАФФМАН ---")
+print("\n ХАФФМАН")
 print("Закодований:", encoded_huff)
 print("Декодований:", decoded_huff)
 print("Коефіцієнт стиснення:", round(original_bits / huffman_bits, 2))
 
-print("\n--- АРИФМЕТИКА ---")
+print("\n АРИФМЕТИКА")
 print("Кодоване число:", code)
 print("Декодований:", decoded)
 print("Коефіцієнт стиснення:", round(original_bits / arithm_bits, 2))
